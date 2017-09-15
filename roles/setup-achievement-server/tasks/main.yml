@@ -1,0 +1,25 @@
+---
+# - name: Create achievement server
+#   command: "oc new-app --image-stream=openshift/redhat-openjdk18-openshift:1.1~{{ achievement_server_repo }} --name=achievement -e JAVA_APP_JAR=vertx-achievement-server-1.0-SNAPSHOT-fat.jar"
+
+- name: Create temporary file for template
+  tempfile:
+    state: file
+    suffix: json
+  register: template_path
+
+- name: Create achievement server template
+  template:
+    src: "../files/achievement-server-template.json"
+    dest: "{{template_path.path}}"
+
+- name: Create achievement server
+  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ achievement_server_repo }}"
+
+
+- name: Wait for achievement server to be ready
+  command: "oc get ep achievement"
+  register: result
+  until: result.stdout.find("none") == -1 
+  retries: 50
+  delay: 10 

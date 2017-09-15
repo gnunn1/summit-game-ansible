@@ -1,0 +1,27 @@
+---
+# - name: Create game server
+#   command: "oc new-app --image-stream=openshift/redhat-openjdk18-openshift:1.1~{{ game_server_repo }} --name=gamebus -e JAVA_APP_JAR=game-service-1.0.0-SNAPSHOT-fat.jar -e JAVA_ARGS='-cluster' -e SCORE_SERVER_PORT=8080 -e ACHIEVEMENTS_SERVER_PORT=8080 -e SCORE_USER={{score_user}} -e SCORE_PASSWORD={{score_password}} -e ACHIEVEMENTS_SERVER='http://achievement:8080/api' -e SCORE_SERVER='http://score:8080/kie-server/services/rest/server/containers/instances/score' -l vertx-cluster=true"
+
+- name: Create temporary file for template
+  tempfile:
+    state: file
+    suffix: json
+  register: template_path
+
+- debug:
+    msg: "{{ template_path }}"
+
+- name: Create game server template
+  template:
+    src: "../files/game-server-template.json"
+    dest: "{{template_path.path}}"
+
+- name: Create game server
+  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }}"
+
+- name: Wait for game server to be ready
+  command: "oc get ep gamebus"
+  register: result
+  until: result.stdout.find("none") == -1 
+  retries: 50
+  delay: 10

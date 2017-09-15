@@ -1,0 +1,44 @@
+---
+- name: Provision Summit Balloon Game
+  hosts: local
+
+  vars_files:
+    - vars/game-config.yml
+
+  roles:
+  - setup-achievement-server
+  - setup-score-server
+  - setup-game-server
+#  - setup-game-app
+
+  pre_tasks:
+
+    - name: Login to openshift as admin
+      command: "oc login -u {{admin_username}} -p {{admin_password}} {{master_url}}"
+
+    - name: Install ephemeral postgresSQL template
+      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/postgresql/templates/postgresql-ephemeral.json -n openshift"
+      ignore_errors: true
+
+    - name: Install Jboss Image Streams
+      command: "oc create -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/jboss-image-streams.json -n openshift"
+      ignore_errors: true
+
+    - name: Install BRMS ImageStream
+      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
+      ignore_errors: true
+
+    - name: Install BRMS template
+      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
+      ignore_errors: true
+
+    - name: Login to openshift as user
+      command: "oc login -u {{username}} -p {{password}} {{master_url}}"
+
+    - name: Create openshift project
+      command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
+      ignore_errors: true      
+
+    # - name: Install nginx-nodejs template
+    #   command: "oc create -f https://raw.githubusercontent.com/jshmrtn/s2i-nodejs-nginx/master/imagestream.json"
+    #   ignore_errors: true

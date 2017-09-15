@@ -1,0 +1,26 @@
+---
+- name: Set score server database facts
+  set_fact:
+    score_db_name: "userdb"
+    score_db_user: "keynote"
+    score_db_password: "imEffH9QP8QcL"
+
+- name: Create score database server
+  command: "oc new-app --template=postgresql-ephemeral -p DATABASE_SERVICE_NAME=score-postgresql -p POSTGRESQL_USER={{score_db_user}} -p POSTGRESQL_PASSWORD={{score_db_password}} -p POSTGRESQL_DATABASE={{score_db_name}}"
+
+- name: Wait for database server to be ready
+  command: "oc get ep score-postgresql"
+  register: result
+  until: result.stdout.find("none") == -1
+  retries: 10
+  delay: 5
+
+- name: Create score server
+  command: "oc new-app decisionserver63-basic-s2i -p APPLICATION_NAME=score -p SOURCE_REPOSITORY_URL={{ score_server_repo }} -p SOURCE_REPOSITORY_REF=master -p CONTEXT_DIR=score -p KIE_CONTAINER_DEPLOYMENT='score=com.redhatkeynote:score:1.0.0' -p KIE_SERVER_USER={{score_user}} -p KIE_SERVER_PASSWORD={{score_password}} -e DB_JNDI='java:jboss/datasources/KeynoteDS' -e DB_DATABASE={{score_db_name}} -e DB_USERNAME='{{score_db_user}}' -e DB_PASSWORD='{{score_db_password}}'"
+
+- name: Wait for score server to be ready
+  command: "oc get ep score"
+  register: result
+  until: result.stdout.find("none") == -1
+  retries: 50
+  delay: 10  

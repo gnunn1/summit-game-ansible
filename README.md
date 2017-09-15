@@ -1,0 +1,3 @@
+Ansible playbook that automates the deployment of the Red Hat Summit 2016 Balloon Game in OpenShift.
+
+This is a work in progress...

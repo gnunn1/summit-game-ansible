@@ -1,0 +1,22 @@
+# OpenShift variables
+master_url: https://192.168.42.108:8443
+username: developer
+password: developer
+
+admin_username: admin
+admin_password: admin
+
+project_name: summit-game
+
+# Score server
+score_user: kieserver
+score_password: ki3server@
+
+# Repositories
+game_server_repo: https://github.com/burrsutter/vertx-game-server
+# Repo below instead of Burr's fixes hibernate issue when compiling
+score_server_repo: https://github.com/gnunn1/score-server
+# Note the achievement server was re-written from EAP to vert.x, this playbook expects the vert.x version
+achievement_server_repo: https://github.com/burrsutter/vertx-achievement-service
+
+mobile_app_repo: https://github.com/gnunn1/mobile-app
