@@ -6,9 +6,9 @@
     - vars/game-config.yml
 
   roles:
-  - setup-achievement-server
-  - setup-score-server
-  - setup-game-server
+  # - setup-achievement-server
+  # - setup-score-server
+  # - setup-game-server
   - setup-game-app
   - setup-admin-app
   - setup-scoreboard-app

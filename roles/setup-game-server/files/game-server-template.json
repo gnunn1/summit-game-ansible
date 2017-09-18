@@ -31,6 +31,12 @@
             "required": false
         },
         {
+            "description": "Custom hostname for http boards service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>",
+            "name": "HOSTNAME_BOARDS_HTTP",
+            "value": "",
+            "required": false
+        },        
+        {
             "description": "Git source URI for application",
             "displayName": "Git Repository URL",
             "name": "SOURCE_REPOSITORY_URL",
@@ -101,6 +107,78 @@
             }
         },
         {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "spec": {
+                "ports": [
+                    {
+                        "port": 9002,
+                        "targetPort": 9002
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}"
+                }
+            },
+            "metadata": {
+                "name": "${APPLICATION_NAME}-internal",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The web server's internal http port."
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "spec": {
+                "ports": [
+                    {
+                        "port": 9003,
+                        "targetPort": 9003
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}"
+                }
+            },
+            "metadata": {
+                "name": "${APPLICATION_NAME}-traffic",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The web server's traffic port."
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "spec": {
+                "ports": [
+                    {
+                        "port": 9004,
+                        "targetPort": 9004
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}"
+                }
+            },
+            "metadata": {
+                "name": "${APPLICATION_NAME}-boards",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The web server's leaderboard and scoreboard port."
+                }
+            }
+        },        
+        {
             "kind": "Route",
             "apiVersion": "v1",
             "id": "${APPLICATION_NAME}-http",
@@ -120,6 +198,26 @@
                 }
             }
         },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "id": "${APPLICATION_NAME}-boards",
+            "metadata": {
+                "name": "${APPLICATION_NAME}-boards",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "Route for application's http service."
+                }
+            },
+            "spec": {
+                "host": "${HOSTNAME_BOARDS_HTTP}",
+                "to": {
+                    "name": "${APPLICATION_NAME}-boards"
+                }
+            }
+        },        
         {
             "kind": "ImageStream",
             "apiVersion": "v1",

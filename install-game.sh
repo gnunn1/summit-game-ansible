@@ -1,1 +1,1 @@
-ansible-playbook -i inventory/inventory.cfg install-game.yml
+time ansible-playbook -i inventory/inventory.cfg install-game.yml
