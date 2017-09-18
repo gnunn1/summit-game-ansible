@@ -10,7 +10,8 @@
   - setup-score-server
   - setup-game-server
   - setup-game-app
-  - setup-game-admin
+  - setup-admin-app
+  - setup-scoreboard-app
 
   pre_tasks:
 
@@ -31,6 +32,10 @@
 
     - name: Install BRMS template
       command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
+      ignore_errors: true
+
+    - name: Install Java S2I ImageStream
+      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/java/imagestreams/redhat-openjdk18-openshift-rhel7.json -n openshift"
       ignore_errors: true
 
     - name: Login to openshift as user

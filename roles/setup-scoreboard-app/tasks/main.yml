@@ -1,9 +1,8 @@
 ---
--
-- name: Create mobile game application
+- name: Create scoreboard application
   command: "oc new-app openshift/nodejs:6~{{ scoreboard_repo }}"
 
-- name: Expose route for mobile admin application
+- name: Expose route for scoreboard application
   command: "oc expose svc scoreboard"
 
 - name: Wait for scoreboard application to be ready

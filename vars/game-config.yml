@@ -1,5 +1,5 @@
 # OpenShift variables
-master_url: https://192.168.42.108:8443
+master_url: https://192.168.42.60:8443
 username: developer
 password: developer
 
@@ -14,13 +14,18 @@ score_password: ki3server@
 
 # Repositories
 game_server_repo: https://github.com/burrsutter/vertx-game-server
+
 # Repo below instead of Burr's fixes hibernate issue when compiling
 score_server_repo: https://github.com/gnunn1/score-server
+
 # Note the achievement server was re-written from EAP to vert.x, this playbook expects the vert.x version
 achievement_server_repo: https://github.com/burrsutter/vertx-achievement-service
 
+# Repo uses a URL based on location so it doesn't have to be changed anymore
 mobile_app_repo: https://github.com/gnunn1/mobile-app
 
+# Repo uses a URL based on location so it doesn't have to be changed anymore
 mobile_admin_app_repo: https://github.com/gnunn1/mobile-app-admin
 
+# Repo uses a URL based on location so it doesn't have to be changed anymore
 scoreboard_repo: https://github.com/gnunn1/scoreboard
