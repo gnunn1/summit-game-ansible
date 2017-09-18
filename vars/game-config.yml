@@ -20,3 +20,5 @@ score_server_repo: https://github.com/gnunn1/score-server
 achievement_server_repo: https://github.com/burrsutter/vertx-achievement-service
 
 mobile_app_repo: https://github.com/gnunn1/mobile-app
+
+mobile_admin_app_repo: https://github.com/gnunn1/mobile-app-admin

@@ -1,0 +1,13 @@
+---
+- name: Setup up mobile admin application
+  command: "oc new-app openshift/nodejs:6~{{ mobile_admin_app_repo }}"
+
+- name: Expose route for mobile admin application
+  command: "oc expose svc mobile-admin-app"
+
+- name: Wait for admin application to be ready
+  command: "oc get ep mobile-admin-app"
+  register: result
+  until: result.stdout.find("none") == -1
+  retries: 50
+  delay: 10      

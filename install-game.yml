@@ -9,7 +9,8 @@
   - setup-achievement-server
   - setup-score-server
   - setup-game-server
-#  - setup-game-app
+  - setup-game-app
+  - setup-game-admin
 
   pre_tasks:
 
@@ -37,8 +38,4 @@
 
     - name: Create openshift project
       command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
-      ignore_errors: true      
-
-    # - name: Install nginx-nodejs template
-    #   command: "oc create -f https://raw.githubusercontent.com/jshmrtn/s2i-nodejs-nginx/master/imagestream.json"
-    #   ignore_errors: true
+      ignore_errors: true
