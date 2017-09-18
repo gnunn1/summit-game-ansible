@@ -2,8 +2,8 @@
 - name: Create mobile game application
   command: "oc new-app openshift/nodejs:4~{{ mobile_app_repo }}"
 
-- name: Expose route for mobile admin application
-  command: "oc expose svc mobile-admin-app"
+- name: Expose route for mobile app application
+  command: "oc expose svc mobile-app"
 
 - name: Wait for game application to be ready
   command: "oc get ep game-app"
