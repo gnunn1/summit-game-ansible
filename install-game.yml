@@ -6,36 +6,31 @@
     - vars/game-config.yml
 
   roles:
-  # - setup-achievement-server
-  # - setup-score-server
-  # - setup-game-server
+  - setup-achievement-server
+  - setup-score-server
+  - setup-game-server
   - setup-game-app
   - setup-admin-app
   - setup-scoreboard-app
 
   pre_tasks:
-
     - name: Login to openshift as admin
       command: "oc login -u {{admin_username}} -p {{admin_password}} {{master_url}}"
 
     - name: Install ephemeral postgresSQL template
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/postgresql/templates/postgresql-ephemeral.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/origin/master/examples/db-templates/postgresql-ephemeral-template.json -n openshift"
       ignore_errors: true
 
-    - name: Install Jboss Image Streams
-      command: "oc create -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/jboss-image-streams.json -n openshift"
+    - name: Install JBoss Image Streams
+      command: "oc apply -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/jboss-image-streams.json -n openshift"
       ignore_errors: true
 
     - name: Install BRMS ImageStream
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
       ignore_errors: true
 
-    - name: Install BRMS template
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
-      ignore_errors: true
-
-    - name: Install Java S2I ImageStream
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/java/imagestreams/redhat-openjdk18-openshift-rhel7.json -n openshift"
+    - name: Install BRMS Templates
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
       ignore_errors: true
 
     - name: Login to openshift as user

@@ -14,8 +14,7 @@
     dest: "{{template_path.path}}"
 
 - name: Create achievement server
-  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ achievement_server_repo }}"
-
+  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ achievement_server_repo }} -p MAVEN_MIRROR_URL={{maven_mirror_url}}"
 
 - name: Wait for achievement server to be ready
   command: "oc get ep achievement"

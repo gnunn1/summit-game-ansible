@@ -1,8 +1,8 @@
 # OpenShift variables
-master_url: https://192.168.42.60:8443
+
+master_url: https://192.168.137.2:8443
 username: developer
 password: developer
-
 admin_username: admin
 admin_password: admin
 
@@ -11,6 +11,9 @@ project_name: summit-game
 # Score server
 score_user: kieserver
 score_password: ki3server@
+
+# Maven repository - unset this if not present
+maven_mirror_url: http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/
 
 # Repositories
 game_server_repo: https://github.com/burrsutter/vertx-game-server
