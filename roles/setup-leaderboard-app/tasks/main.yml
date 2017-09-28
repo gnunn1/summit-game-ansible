@@ -3,7 +3,7 @@
   command: "oc new-app openshift/nodejs:6~{{ leaderboard_repo }}"
 
 - name: Expose route for leaderboard application
-  command: "oc expose svc scoreboard"
+  command: "oc expose svc leaderboard"
 
 - name: Wait for leaderboard application to be ready
   command: "oc get ep leaderboard"
