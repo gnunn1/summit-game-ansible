@@ -2,7 +2,7 @@
 
 This is a playbook to get the Red Hat 2016 Summit game up and running within an Openshift environment. It is highly recommended that you view the demo of the game that was done at the 2016 Red Hat Summit [here](https://www.youtube.com/watch?v=ooA6FmTL4Dk) to understand what the game is about. As a summary, the game is a balloon popping game where the attendees can participate by playing the game while the demo is running.
 
-Note that this game uses a microservice architecture and  requires quite a few pods to run, thus if you are using Minishift or the Red Hat CDK it is recommended that you allocate additional memory to the environment using ```minishift config set memory xxxx```. The demo uses xxxx amount of memory and you will need some over and above tat for rolling deployments, builds, etc.
+Note that this game uses a microservice architecture and  requires quite a few pods to run, thus if you are using Minishift or the Red Hat CDK it is recommended that you allocate additional memory to the environment using ```minishift config set memory xxxx```. The demo uses approximatly 3.5 GB amount of memory and you will need some over and above that for rolling deployments, builds, etc.
 
 ### Prequisites
 
