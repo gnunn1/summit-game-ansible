@@ -34,6 +34,10 @@ oc adm policy add-cluster-role-to-user cluster-admin <username>
 
 You will need the variables in ```vars/game-config.yml``` to match the particulars of your Openshift installation.
 
+### Installing The Game
+
+To install the game, simply run the ```install.sh``` command which will run the ansible playbook. It will take approximately 10 to 15 minutes to install everything.
+
 ### Repositories
 
 As mentioned previously, the game consists of a number of repositories in github, 21 in total in fact. This guide builds a subset of the game: the basic game plus the administration app, scoreboard, leaderboard and achievements are all function. This guide does not cover the Pipeline and CICD functionality that was demonstrated in the video. At the moment the following repositories are used:

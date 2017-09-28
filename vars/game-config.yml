@@ -1,5 +1,5 @@
 # OpenShift variables
-master_url: https://192.168.42.60:8443
+master_url: https://192.168.42.233:8443
 username: developer
 password: developer
 
