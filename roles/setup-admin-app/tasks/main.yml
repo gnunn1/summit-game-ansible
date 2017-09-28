@@ -5,6 +5,9 @@
 - name: Expose route for mobile admin application
   command: "oc expose svc mobile-app-admin"
 
+- name: Create probes
+  command: "oc set probe dc/mobile-app-admin --readiness --liveness --open-tcp=8080 --initial-delay-seconds=10"
+
 - name: Wait for admin application to be ready
   command: "oc get ep mobile-app-admin"
   register: result

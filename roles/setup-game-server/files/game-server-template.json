@@ -337,6 +337,20 @@
                                 "name": "${APPLICATION_NAME}",
                                 "image": "${APPLICATION_NAME}",
                                 "imagePullPolicy": "Always",
+                                "livenessProbe": {
+                                    "tcpSocket": {
+                                        "port": 9001
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 1
+                                },
+                                "readinessProbe": {
+                                    "tcpSocket": {
+                                        "port": 9001
+                                     },
+                                     "initialDelaySeconds": 30,
+                                     "timeoutSeconds": 1
+                                },                                
                                 "env": [
                                     {
                                         "name": "JAVA_APP_JAR",

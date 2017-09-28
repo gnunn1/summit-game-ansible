@@ -5,6 +5,9 @@
 - name: Expose route for mobile app application
   command: "oc expose svc mobile-app"
 
+- name: Create probes
+  command: "oc set probe dc/mobile-app --readiness --liveness --open-tcp=8080 --initial-delay-seconds=10"
+
 - name: Wait for game application to be ready
   command: "oc get ep mobile-app"
   register: result
