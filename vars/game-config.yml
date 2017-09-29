@@ -32,3 +32,6 @@ mobile_admin_app_repo: https://github.com/gnunn1/mobile-app-admin
 
 # Repo uses a URL based on location so it doesn't have to be changed anymore
 scoreboard_repo: https://github.com/gnunn1/scoreboard
+
+# Repo uses a URL based on location so it doesn't have to be changed anymore
+leaderboard_repo: https://github.com/eformat/leaderboard

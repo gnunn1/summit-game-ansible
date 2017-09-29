@@ -12,6 +12,7 @@
   - setup-game-app
   - setup-admin-app
   - setup-scoreboard-app
+  - setup-leaderboard-app
 
   pre_tasks:
     - name: Login to openshift as admin
