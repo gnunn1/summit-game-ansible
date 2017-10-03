@@ -1,0 +1,95 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "gamebus-routes"
+    },
+    "labels": {
+        "template": "gamebus"
+    },
+    "message": "New blue-green routes have been created for the application",
+    "parameters": [
+        {
+            "description": "The name for the application.",
+            "displayName": "Application Name",
+            "name": "APPLICATION_NAME",
+            "value": "gamebus",
+            "required": true
+        },
+        {
+            "description": "Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>",
+            "displayName": "Custom http Route Hostname",
+            "name": "HOSTNAME_HTTP",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "Custom hostname for http boards service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>",
+            "name": "HOSTNAME_BOARDS_HTTP",
+            "value": "",
+            "required": false
+        }
+    ],
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Route",
+            "id": "${APPLICATION_NAME}-http",
+            "metadata": {
+                "name": "${APPLICATION_NAME}",
+                "labels": {
+                    "app": "${APPLICATION_NAME}",
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "Route for application's http service."
+                }
+            },
+            "spec": {
+                "host": "${HOSTNAME_HTTP}",
+                "alternateBackends": [
+                    {
+                        "kind": "Service",
+                        "name": "${APPLICATION_NAME}-green",
+                        "weight": 1
+                    }
+                ],
+                "to": {
+                    "kind": "Service",
+                    "name": "${APPLICATION_NAME}-blue",
+                    "weight": 1
+                }
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Route",
+            "id": "${APPLICATION_NAME}-boards",
+            "metadata": {
+                "name": "${APPLICATION_NAME}-boards",
+                "labels": {
+                    "app": "${APPLICATION_NAME}",
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "Route for application's board service."
+                }
+            },
+            "spec": {
+                "host": "${HOSTNAME_BOARDS_HTTP}",
+                "alternateBackends": [
+                    {
+                        "kind": "Service",
+                        "name": "${APPLICATION_NAME}-green-boards",
+                        "weight": 1
+                    }
+                ],
+                "to": {
+                    "kind": "Service",
+                    "name": "${APPLICATION_NAME}-blue-boards",
+                    "weight": 1
+                }
+            }
+        }
+    ]
+}

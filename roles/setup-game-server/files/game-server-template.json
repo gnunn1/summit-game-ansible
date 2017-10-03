@@ -24,19 +24,6 @@
             "required": true
         },
         {
-            "description": "Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>",
-            "displayName": "Custom http Route Hostname",
-            "name": "HOSTNAME_HTTP",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "Custom hostname for http boards service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>",
-            "name": "HOSTNAME_BOARDS_HTTP",
-            "value": "",
-            "required": false
-        },        
-        {
             "description": "Git source URI for application",
             "displayName": "Git Repository URL",
             "name": "SOURCE_REPOSITORY_URL",
@@ -79,7 +66,14 @@
             "name": "IMAGE_STREAM_NAMESPACE",
             "value": "openshift",
             "required": true
-        }
+        },
+        {
+            "description": "Deployment color (i.e. default, blue, green or canary)",
+            "displayName": "Color",
+            "name": "COLOR",
+            "value": "default",
+            "required": false
+        }        
     ],
     "objects": [
         {
@@ -175,46 +169,6 @@
                 },
                 "annotations": {
                     "description": "The web server's leaderboard and scoreboard port."
-                }
-            }
-        },        
-        {
-            "kind": "Route",
-            "apiVersion": "v1",
-            "id": "${APPLICATION_NAME}-http",
-            "metadata": {
-                "name": "${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "Route for application's http service."
-                }
-            },
-            "spec": {
-                "host": "${HOSTNAME_HTTP}",
-                "to": {
-                    "name": "${APPLICATION_NAME}"
-                }
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "v1",
-            "id": "${APPLICATION_NAME}-boards",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-boards",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "Route for application's http service."
-                }
-            },
-            "spec": {
-                "host": "${HOSTNAME_BOARDS_HTTP}",
-                "to": {
-                    "name": "${APPLICATION_NAME}-boards"
                 }
             }
         },        
@@ -387,7 +341,11 @@
                                     {   
                                         "name": "SCORE_PASSWORD",
                                         "value": "{{score_password}}"
-                                    }
+                                    },
+                                    {   
+                                        "name": "COLOR",
+                                        "value": "${COLOR}"
+                                    }                                    
                                 ],
                                 "ports": [
                                     {
