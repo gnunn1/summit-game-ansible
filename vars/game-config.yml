@@ -12,6 +12,9 @@ project_name: summit-game
 score_user: kieserver
 score_password: ki3server@
 
+# Maven repository - set this to use a Maven Mirror for builds
+# maven_mirror_url: http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/
+
 # Repositories
 game_server_repo: https://github.com/gnunn1/vertx-game-server
 

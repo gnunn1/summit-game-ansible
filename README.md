@@ -42,6 +42,16 @@ To install the game, simply run the ```install.sh``` command which will run the 
 
 To manage the game, login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```.
 
+### Blue/Green Gamebus Deployment
+
+_Note this is a work in progress_
+
+This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. When a game player uses the game application, the background color is automatically set based on the color. This is done through the COLOR environment variable. Valid colors include ```default```, ```blue```, ```green``` or ```canary```.
+
+Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. You can do this by either having the users refresh the game or by shutting down all pods for the previous color.
+
+A future version of this demo will include a pipeline to better manage this process in an automated fashion.
+
 ### Repositories
 
 As mentioned previously, the game consists of a number of repositories in github, 21 in total in fact. This guide builds a subset of the game: the basic game plus the administration app, scoreboard, leaderboard and achievements are all function. This guide does not cover the Pipeline and CICD functionality that was demonstrated in the video. At the moment the following repositories are used:

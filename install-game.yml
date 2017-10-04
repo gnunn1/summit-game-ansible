@@ -20,23 +20,23 @@
       command: "oc login -u {{admin_username}} -p {{admin_password}} {{master_url}}"
 
     - name: Install ephemeral postgresSQL template
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/postgresql/templates/postgresql-ephemeral.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/postgresql/templates/postgresql-ephemeral.json -n openshift"
       ignore_errors: true
 
     - name: Install Jboss Image Streams
-      command: "oc create -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/jboss-image-streams.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/jboss-image-streams.json -n openshift"
       ignore_errors: true
 
     - name: Install BRMS ImageStream
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
       ignore_errors: true
 
     - name: Install BRMS template
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/templates/decisionserver63-basic-s2i.json -n openshift"
       ignore_errors: true
 
     - name: Install Java S2I ImageStream
-      command: "oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/official/java/imagestreams/redhat-openjdk18-openshift-rhel7.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/java/imagestreams/redhat-openjdk18-openshift-rhel7.json -n openshift"
       ignore_errors: true
 
     - name: Login to openshift as user
@@ -45,3 +45,8 @@
     - name: Create openshift project
       command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
       ignore_errors: true
+
+    - name: Set empty Maven Mirror variable
+      set_fact: 
+        maven_mirror_url: ""
+      when: maven_mirror_url is not defined

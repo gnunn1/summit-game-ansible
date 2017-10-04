@@ -51,7 +51,7 @@
                     {
                         "kind": "Service",
                         "name": "${APPLICATION_NAME}-green",
-                        "weight": 1
+                        "weight": 0
                     }
                 ],
                 "to": {
@@ -81,7 +81,7 @@
                     {
                         "kind": "Service",
                         "name": "${APPLICATION_NAME}-green-boards",
-                        "weight": 1
+                        "weight": 0
                     }
                 ],
                 "to": {

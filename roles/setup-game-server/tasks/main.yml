@@ -14,10 +14,10 @@
     dest: "{{template_path.path}}"
 
 - name: Create blue game server
-  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=blue -p APPLICATION_NAME=gamebus-blue"
+  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=blue -p APPLICATION_NAME=gamebus-blue --build-env MAVEN_MIRROR_URL={{maven_mirror_url}}"
 
 - name: Create green game server
-  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=green -p APPLICATION_NAME=gamebus-green"
+  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=green -p APPLICATION_NAME=gamebus-green --build-env MAVEN_MIRROR_URL={{maven_mirror_url}}"
 
 - name: Wait for blue game server to be ready
   command: "oc get ep gamebus-blue"

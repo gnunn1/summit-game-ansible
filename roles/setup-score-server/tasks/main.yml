@@ -13,14 +13,14 @@
   register: result
   until: result.stdout.find("none") == -1
   retries: 10
-  delay: 5
+  delay: 10
 
 - name: Create score server
-  command: "oc new-app decisionserver63-basic-s2i -p APPLICATION_NAME=score -p SOURCE_REPOSITORY_URL={{ score_server_repo }} -p SOURCE_REPOSITORY_REF=master -p CONTEXT_DIR=score -p KIE_CONTAINER_DEPLOYMENT='score=com.redhatkeynote:score:1.0.0' -p KIE_SERVER_USER={{score_user}} -p KIE_SERVER_PASSWORD={{score_password}} -e DB_JNDI='java:jboss/datasources/KeynoteDS' -e DB_DATABASE={{score_db_name}} -e DB_USERNAME='{{score_db_user}}' -e DB_PASSWORD='{{score_db_password}}'"
+  command: "oc new-app decisionserver63-basic-s2i -p APPLICATION_NAME=score -p SOURCE_REPOSITORY_URL={{ score_server_repo }} -p SOURCE_REPOSITORY_REF=master -p CONTEXT_DIR=score -p KIE_CONTAINER_DEPLOYMENT='score=com.redhatkeynote:score:1.0.0' -p KIE_SERVER_USER={{score_user}} -p KIE_SERVER_PASSWORD={{score_password}} -e DB_JNDI='java:jboss/datasources/KeynoteDS' -e DB_DATABASE={{score_db_name}} -e DB_USERNAME='{{score_db_user}}' -e DB_PASSWORD='{{score_db_password}}' -p MAVEN_MIRROR_URL={{maven_mirror_url}}"
 
 - name: Wait for score server to be ready
   command: "oc get ep score"
   register: result
   until: result.stdout.find("none") == -1
   retries: 50
-  delay: 10  
+  delay: 20  

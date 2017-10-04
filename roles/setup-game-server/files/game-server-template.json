@@ -73,7 +73,13 @@
             "name": "COLOR",
             "value": "default",
             "required": false
-        }        
+        },
+        {
+            "description": "Maven Mirror URL",
+            "displayName": "Maven Mirror URL",
+            "name": "MAVEN_MIRROR_URL",
+            "required": false
+        }
     ],
     "objects": [
         {
@@ -295,14 +301,14 @@
                                     "tcpSocket": {
                                         "port": 9001
                                     },
-                                    "initialDelaySeconds": 30,
+                                    "initialDelaySeconds": 15,
                                     "timeoutSeconds": 1
                                 },
                                 "readinessProbe": {
                                     "tcpSocket": {
                                         "port": 9001
                                      },
-                                     "initialDelaySeconds": 30,
+                                     "initialDelaySeconds": 15,
                                      "timeoutSeconds": 1
                                 },                                
                                 "env": [
