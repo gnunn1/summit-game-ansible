@@ -1,0 +1,6 @@
+---
+- name: Install Jenkins
+  command: "oc new-app jenkins-ephemeral"
+
+- name: Install pipeline
+  shell: "oc process -p APPLICATION_NAME=gamebus -p PROJECT_NAME={{project_name}} -f roles/setup-cicd/files/pipeline.yml | oc create -f -"

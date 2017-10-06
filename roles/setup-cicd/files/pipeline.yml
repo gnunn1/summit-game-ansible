@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Template
+labels:
+  demo: summit-game
+  template: gamebus-pipeline
+metadata:
+  name: gamebus-pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: ${PIPELINE_NAME}
+      app: ${APPLICATION_NAME}
+    name: ${PIPELINE_NAME}
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "${APPLICATION_NAME}", "kind": "BuildConfig"},{"name": "${APPLICATION_NAME}-blue", "kind": "DeploymentConfig"},{"name": "${APPLICATION_NAME}-green", "kind": "DeploymentConfig"}]'
+  spec:
+    runPolicy: Serial
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          node ('maven') {
+            stage 'Build'
+            openshiftBuild(buildConfig: 'gamebus', namespace: '${PROJECT_NAME}', showBuildLogs: 'true')
+            openshiftVerifyBuild(buildConfig: 'gamebus', namespace: '${PROJECT_NAME}', waitTime: 900000)
+          }
+
+          def tag="blue"
+          def altTag="green"
+
+          node {
+            stage 'Deploy to Not Live'
+            sh "oc get route gamebus -n ${PROJECT_NAME} -o jsonpath='{ .spec.to.name }' > activeservice"
+            activeService = readFile('activeservice').trim()
+            if (activeService == "gamebus-blue") {
+              tag = "green"
+              altTag = "blue"
+            }
+
+            openshiftTag(sourceStream: 'gamebus', sourceTag: 'latest', namespace: '${PROJECT_NAME}', destinationStream: 'gamebus', destinationTag: "${tag}", destinationNamespace: '${PROJECT_NAME}')
+            sleep 5
+            openshiftVerifyDeployment(deploymentConfig: "gamebus-${tag}", replicaCount: 1, verifyReplicaCount: true, namespace: '${PROJECT_NAME}')
+
+            stage 'Smoke Tests in PROD (Not Live)'
+            sleep 5
+          }
+
+          stage 'Approve Go Live'
+          timeout(time:30, unit:'MINUTES') {
+            input message:'Go Live (switch to new version)?'
+          }
+
+          node {
+            stage 'Go Live'
+            sh "oc set route-backends gamebus gamebus-${tag}=100 gamebus-${altTag}=0 -n ${PROJECT_NAME}"
+            sh "oc set route-backends gamebus-boards gamebus-${tag}-boards=100 gamebus-${altTag}-boards=0 -n ${PROJECT_NAME}"
+            
+            sh "oc label svc gamebus-${altTag} app-state=idle --overwrite -n ${PROJECT_NAME}"
+            sh "oc label svc gamebus-${tag} app-state=live --overwrite -n ${PROJECT_NAME}"
+            sleep 5
+          }
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: ${GITHUB_WEBHOOK_SECRET}
+      type: GitHub
+    - generic:
+        secret: ${GENERIC_WEBHOOK_SECRET}
+      type: Generic
+parameters:
+- description: The name of the application
+  displayName: Application Name
+  name: APPLICATION_NAME
+  required: true
+  value: gamebus
+- description: The name for the pipeline.
+  displayName: Pipeline Name
+  name: PIPELINE_NAME
+  required: true
+  value: gamebus-pipeline
+- description: Project Name
+  displayName: Project Name
+  name: PROJECT_NAME
+  value: summit-game
+  required: true
+- description: GitHub webhook secret
+  displayName: GitHub Webhook Secret
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: GITHUB_WEBHOOK_SECRET
+  required: true
+- description: Generic webhook secret
+  displayName: Generic Webhook Secret
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: GENERIC_WEBHOOK_SECRET
+  required: true

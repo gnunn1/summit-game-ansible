@@ -1,5 +1,5 @@
 # OpenShift variables
-master_url: https://192.168.42.24:8443
+master_url: https://192.168.42.62:8443
 username: developer
 password: developer
 
@@ -13,7 +13,7 @@ score_user: kieserver
 score_password: ki3server@
 
 # Maven repository - set this to use a Maven Mirror for builds
-# maven_mirror_url: http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/
+# maven_mirror_url: http://nexus.nexus:8081/nexus/content/groups/public
 
 # Repositories
 game_server_repo: https://github.com/gnunn1/vertx-game-server

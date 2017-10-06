@@ -3,9 +3,9 @@
     "apiVersion": "v1",
     "metadata": {
         "annotations": {
-            "iconClass": "icon-jboss",
+            "iconClass": "icon-java",
             "description": "Application template for Summit game bus",
-            "tags": "java,xpaas",
+            "tags": "java",
             "version": "1.0.0",
             "openshift.io/display-name": "Summit Game Bus"
         },
@@ -24,55 +24,11 @@
             "required": true
         },
         {
-            "description": "Git source URI for application",
-            "displayName": "Git Repository URL",
-            "name": "SOURCE_REPOSITORY_URL",
-            "value": "https://github.com/burrsutter/vertx-game-server",
-            "required": true
-        },
-        {
-            "description": "Git branch/tag reference",
-            "displayName": "Git Reference",
-            "name": "SOURCE_REPOSITORY_REF",
-            "value": "master",
-            "required": false
-        },
-        {
-            "description": "Path within Git project to build; empty for root project directory.",
-            "displayName": "Context Directory",
-            "name": "CONTEXT_DIR",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "GitHub trigger secret",
-            "displayName": "Github Webhook Secret",
-            "name": "GITHUB_WEBHOOK_SECRET",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "description": "Generic build trigger secret",
-            "displayName": "Generic Webhook Secret",
-            "name": "GENERIC_WEBHOOK_SECRET",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "displayName": "ImageStream Namespace",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "description": "Deployment color (i.e. default, blue, green or canary)",
             "displayName": "Color",
             "name": "COLOR",
             "value": "default",
-            "required": false
+            "required": true
         },
         {
             "description": "Maven Mirror URL",
@@ -93,13 +49,14 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 }
             },
             "metadata": {
-                "name": "${APPLICATION_NAME}",
+                "name": "${APPLICATION_NAME}-${COLOR}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}",
+                    "variant": "${COLOR}"
                 },
                 "annotations": {
                     "description": "The application's http port."
@@ -117,13 +74,14 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 }
             },
             "metadata": {
-                "name": "${APPLICATION_NAME}-internal",
+                "name": "${APPLICATION_NAME}-${COLOR}-internal",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}",
+                    "variant": "${COLOR}"
                 },
                 "annotations": {
                     "description": "The web server's internal http port."
@@ -141,13 +99,14 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 }
             },
             "metadata": {
-                "name": "${APPLICATION_NAME}-traffic",
+                "name": "${APPLICATION_NAME}-${COLOR}-traffic",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}",
+                    "variant": "${COLOR}"
                 },
                 "annotations": {
                     "description": "The web server's traffic port."
@@ -165,94 +124,28 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 }
             },
             "metadata": {
-                "name": "${APPLICATION_NAME}-boards",
+                "name": "${APPLICATION_NAME}-${COLOR}-boards",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}",
+                    "variant": "${COLOR}"
                 },
                 "annotations": {
                     "description": "The web server's leaderboard and scoreboard port."
                 }
-            }
-        },        
-        {
-            "kind": "ImageStream",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                }
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "${SOURCE_REPOSITORY_URL}",
-                        "ref": "${SOURCE_REPOSITORY_REF}"
-                    },
-                    "contextDir": "${CONTEXT_DIR}"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "forcePull": true,
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                            "name": "redhat-openjdk18-openshift:1.1"
-                        }
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}:latest"
-                    }
-                },
-                "triggers": [
-                    {
-                        "type": "GitHub",
-                        "github": {
-                            "secret": "${GITHUB_WEBHOOK_SECRET}"
-                        }
-                    },
-                    {
-                        "type": "Generic",
-                        "generic": {
-                            "secret": "${GENERIC_WEBHOOK_SECRET}"
-                        }
-                    },
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ]
             }
         },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}",
+                "name": "${APPLICATION_NAME}-${COLOR}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}",
+                    "variant": "${COLOR}"
                 }
             },
             "spec": {
@@ -265,11 +158,11 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "${APPLICATION_NAME}"
+                                "${APPLICATION_NAME}-${COLOR}"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "${APPLICATION_NAME}:latest"
+                                "name": "${APPLICATION_NAME}:${COLOR}"
                             }
                         }
                     },
@@ -279,14 +172,15 @@
                 ],
                 "replicas": 1,
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 },
                 "template": {
                     "metadata": {
-                        "name": "${APPLICATION_NAME}",
+                        "name": "${APPLICATION_NAME}-${COLOR}",
                         "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}",
-                            "application": "${APPLICATION_NAME}",
+                            "app": "${APPLICATION_NAME}",
+                            "variant": "${COLOR}",
+                            "deploymentConfig": "${APPLICATION_NAME}-${COLOR}",
                             "vertx-cluster": "true"
                         }
                     },
@@ -294,8 +188,8 @@
                         "terminationGracePeriodSeconds": 75,
                         "containers": [
                             {
-                                "name": "${APPLICATION_NAME}",
-                                "image": "${APPLICATION_NAME}",
+                                "name": "${APPLICATION_NAME}-${COLOR}",
+                                "image": " ",
                                 "imagePullPolicy": "Always",
                                 "livenessProbe": {
                                     "tcpSocket": {

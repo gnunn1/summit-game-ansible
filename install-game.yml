@@ -13,7 +13,8 @@
   - setup-admin-app
   - setup-scoreboard-app
   - setup-leaderboard-app
-
+  - setup-cicd
+  
   pre_tasks:
 
     - name: Login to openshift as admin

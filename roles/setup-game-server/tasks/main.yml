@@ -1,12 +1,23 @@
 ---
-- name: Create temporary file for template
+# Create single build for both blue/green rather then separate apps
+- name: Create gamebus buildconfig
+  shell: "oc process -p APPLICATION_NAME=gamebus -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p MAVEN_MIRROR_URL={{maven_mirror_url}} -f roles/setup-game-server/files/game-server-build.json | oc create -f -"
+
+- name: Start gamebus build and wait
+  command: "oc start-build gamebus --wait=true"
+
+- name: Tag gamebus imagestream for colors
+  shell: |
+    oc tag {{project_name}}/gamebus:latest {{project_name}}/gamebus:green
+    oc tag {{project_name}}/gamebus:latest {{project_name}}/gamebus:blue
+    oc tag {{project_name}}/gamebus:latest -d
+
+# Start creating blue/green apps
+- name: Create temporary file for application template
   tempfile:
     state: file
     suffix: json
   register: template_path
-
-- debug:
-    msg: "{{ template_path }}"
 
 - name: Create game server template
   template:
@@ -14,10 +25,10 @@
     dest: "{{template_path.path}}"
 
 - name: Create blue game server
-  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=blue -p APPLICATION_NAME=gamebus-blue --build-env MAVEN_MIRROR_URL={{maven_mirror_url}}"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=blue -p APPLICATION_NAME=gamebus"
 
 - name: Create green game server
-  command: "oc new-app -f {{template_path.path}} -p SOURCE_REPOSITORY_URL={{ game_server_repo }} -p COLOR=green -p APPLICATION_NAME=gamebus-green --build-env MAVEN_MIRROR_URL={{maven_mirror_url}}"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=green -p APPLICATION_NAME=gamebus"
 
 - name: Wait for blue game server to be ready
   command: "oc get ep gamebus-blue"

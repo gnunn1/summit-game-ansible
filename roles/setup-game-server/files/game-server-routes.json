@@ -38,8 +38,7 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "app": "${APPLICATION_NAME}",
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}"
                 },
                 "annotations": {
                     "description": "Route for application's http service."
@@ -68,8 +67,7 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}-boards",
                 "labels": {
-                    "app": "${APPLICATION_NAME}",
-                    "application": "${APPLICATION_NAME}"
+                    "app": "${APPLICATION_NAME}"
                 },
                 "annotations": {
                     "description": "Route for application's board service."
