@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/gnunn1/summit-game-ansible/blob/master/docs/img/game.png?raw=true" alt="Game Screenshot"/>
+</p>
+
 # Introduction
 
 This is a playbook to get the Red Hat 2016 Summit game up and running within an Openshift environment. It is highly recommended that you view the demo of the game that was done at the 2016 Red Hat Summit [here](https://www.youtube.com/watch?v=ooA6FmTL4Dk) to understand what the game is about. As a summary, the game is a balloon popping game where the attendees can participate by playing the game while the demo is running.
