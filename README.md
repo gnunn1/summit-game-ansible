@@ -54,7 +54,9 @@ This playbook installs the gamebus in a blue/green configuration with 100% of th
 
 Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. You can do this by either having the users refresh the game or by shutting down all pods for the previous color.
 
-A future version of this demo will include a pipeline to better manage this process in an automated fashion.
+A ```gamebus-pipeline``` is included which will build and deploy the applicatiion as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo.
+
+In the future I am planning to have the pipeline send a message to the gamebus to cause the game client to automatically reconnect and update the background color.
 
 ### Repositories
 
