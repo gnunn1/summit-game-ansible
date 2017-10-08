@@ -59,6 +59,11 @@ objects:
             sh "oc label svc gamebus-${altTag} app-state=idle --overwrite -n ${PROJECT_NAME}"
             sh "oc label svc gamebus-${tag} app-state=live --overwrite -n ${PROJECT_NAME}"
             sleep 5
+
+            stage 'Request Reconnect'
+            sh "curl -H 'Content-Type: application/json' -X POST -d '{\"type\":\"reconnect\",\"token\":\"CH2UsJePthRWTmLI8EY6\"}' http://gamebus-${altTag}:9001/reconnect"
+
+            sleep 5             
           }
       type: JenkinsPipeline
     triggers:
