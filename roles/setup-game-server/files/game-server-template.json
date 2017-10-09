@@ -181,7 +181,7 @@
                             "app": "${APPLICATION_NAME}",
                             "variant": "${COLOR}",
                             "deploymentConfig": "${APPLICATION_NAME}-${COLOR}",
-                            "vertx-cluster": "true"
+                            "vertx-cluster": "${APPLICATION_NAME}-${COLOR}"
                         }
                     },
                     "spec": {
@@ -245,6 +245,11 @@
                                     {   
                                         "name": "COLOR",
                                         "value": "${COLOR}"
+                                    },
+                                    {
+                                        "name": "POD_LABEL_VALUE",
+                                        "value": "${APPLICATION_NAME}-${COLOR}"
+
                                     }                                    
                                 ],
                                 "ports": [
