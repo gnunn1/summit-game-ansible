@@ -47,8 +47,8 @@
       command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
       ignore_errors: true
 
-    - name: Add view role to support kubernetes discovery
-      command: "oc policy add-role-to-group view system:serviceaccount:{{project_name}}:default -n {{project_name}}"
+    - name: Add view role to support kubernetes discovery for system:serviceaccounts:summit-game group
+      command: "oc policy add-role-to-group view system:serviceaccount:{{project_name}} -n {{project_name}}"
       ignore_errors: true
 
     - name: Set empty Maven Mirror variable
