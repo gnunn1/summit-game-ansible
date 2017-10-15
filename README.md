@@ -60,7 +60,7 @@ This demo has been tested once with a group of people and it worked well, howeve
 
 ### Repositories
 
-As mentioned previously, the game consists of a number of repositories in github, 21 in total in fact. This guide builds a subset of the game: the basic game plus the administration app, scoreboard, leaderboard and achievements are all function. This guide does not cover the Pipeline and CICD functionality that was demonstrated in the video. At the moment the following repositories are used:
+The original game consisted of a number of repositories in github, 21 in total in fact. This version builds a subset of the game: the basic game plus the administration app, scoreboard, leaderboard and achievements are all functional. This version does not include the Pipeline and CICD visualization that was demonstrated in the video. At the moment the following repositories are used:
 
 | Repository | Description
 |---|---|
