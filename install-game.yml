@@ -48,7 +48,7 @@
       ignore_errors: true
 
     - name: Add view role to support kubernetes discovery for system:serviceaccounts:summit-game group
-      command: "oc policy add-role-to-group view system:serviceaccount:{{project_name}} -n {{project_name}}"
+      command: "oc policy add-role-to-group view system:serviceaccounts:{{project_name}} -n {{project_name}}"
       ignore_errors: true
 
     - name: Set empty Maven Mirror variable

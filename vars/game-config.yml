@@ -1,10 +1,23 @@
-# OpenShift variables
+################################################
+#  Minishift variables
+################################################
 master_url: https://192.168.42.62:8443
 username: developer
 password: developer
 
 admin_username: admin
 admin_password: admin
+
+################################################
+# ocplab.com variables
+################################################
+
+#master_url: https://ocplab.com:8443
+#username: developer3
+#password: xxxxxx
+
+#admin_username: admin
+#admin_password: xxxxxx
 
 project_name: summit-game
 
@@ -13,7 +26,7 @@ score_user: kieserver
 score_password: ki3server@
 
 # Maven repository - set this to use a Maven Mirror for builds
-# maven_mirror_url: http://nexus.nexus:8081/nexus/content/groups/public
+# maven_mirror_url: http://nexus.nexus:8081/content/groups/public
 
 # Repositories
 game_server_repo: https://github.com/gnunn1/vertx-game-server

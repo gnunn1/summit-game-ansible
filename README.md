@@ -48,15 +48,15 @@ To manage the game, login into the admin application. The default token is ```CH
 
 ### Blue/Green Gamebus Deployment
 
-This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green environments are separate vert.x clusters that use a custom Kubernetes discovery strategy that was created as part of the original application. This means that each cluster has separate state (game state, players, teams, etc) so when switching between the two environments the game will effectively be reset. 
+This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green environments can be either a single or separate vert.x clusters, by default it is a single cluster. In the single cluster mode, it uses multicast which is supported in OpenShift 3.5 and later only. In separate cluser mode, it uses a custom Kubernetes discovery strategy that was created as part of the original demo for Summit 2016. In separate cluster mode, this means that each cluster has separate state (game state, players, teams, etc) so when switching between the two environments the game will effectively be reset. 
 
-A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo. When using this as a demo, it is recommended to set the game state to 'title' before initiating the pipeline, particularly if you plan to switch back and forth between blue and green multiple times. 
+A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo. When using this as a demo with the separate cluster configuration, it is recommended to set the game state to 'title' before initiating the pipeline, particularly if you plan to switch back and forth between blue and green multiple times. When using the default single cluster there is no need for this since the state is shared between the two.
 
 When a game player connects the game client, the background color is automatically set based on the color of the environment making it easy for the audience to understand when the environment has been flipped. This is done through the COLOR environment variable. Valid colors include ```default```, ```blue```, ```green``` or ```canary```. This also means that setting the background in the admin application is ignored when the COLOR environment variable is present.
 
 Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a blue moon it doesn't take and some players may need to do a manual refresh.
 
-This demo has not been tested with a group of people and I'm not sure how well the blue/green switching, feedback is very welcome. 
+This demo has been tested once with a group of people and it worked well, however feedback is always welcome.
 
 ### Repositories
 
@@ -74,11 +74,9 @@ As mentioned previously, the game consists of a number of repositories in github
 
 ### Random Thoughts
 
-I toyed with making the blue/green a single vert.x cluster versus separate clusters. The single cluster is appealing because the game state, players and other persistent information would be carried between the two when switching from blue to green making for a more seamless transition. However the single cluster had a number of issues associated with it since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both and it causes some odd edge case issues.
+I've facilitated between making the blue/green a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information would be carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both and it could cause some odd edge case issues. One issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
 
-Ideally things like the game state, player identifiers, configuration, etc would be moved to a centralized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
-
-The vert.x game server is using a Kubernetes discovery strategy. This is somewhat complicated compared to simply using multicast, however as far as I can tell vert.x doesn't provide an easy way to change the multicast address programatically. This means everything on that address becomes part of the same cluster. Ideally it would be nice if there was a way to use environment variables in ```cluster.xml``` but googling hasn't turned up a way to do it for me.
+Ideally things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
 
 ### Credits
 
