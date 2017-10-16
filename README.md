@@ -48,11 +48,11 @@ To manage the game, login into the admin application. The default token is ```CH
 
 ### Blue/Green Gamebus Deployment
 
-This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green gamebus environments are configured as a single vert.x cluster and it uses multicast which is only supported in OpenShift 3.5 and later only. 
+This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green gamebus environments are configured as a single vert.x cluster and it uses multicast which is only supported in OpenShift 3.5 and later only.
 
-A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo.
+The background of the game client reflects the environment color the player is connected to. A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo.
 
-Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a while it doesn't take and some players may need to do a manual refresh of their browser so be prepared for that.
+Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background automatically. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a while it doesn't take and some players may need to do a manual refresh of their browser so be prepared for that.
 
 When a game player connects the game client, the background color is automatically set based on the color of the environment making it easy for the audience to understand when the environment has been flipped. This is done through the COLOR environment variable. Valid colors include ```default```, ```blue```, ```green``` or ```canary```. This also means that setting the background in the admin application is ignored when the COLOR environment variable is present.
 
