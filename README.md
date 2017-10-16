@@ -36,7 +36,7 @@ oc adm policy add-cluster-role-to-user cluster-admin <username>
 
 #### Ansible Variables
 
-You will need the variables in ```vars/game-config.yml``` to match the particulars of your Openshift installation.
+You will need to update the variables in ```vars/game-config.yml``` to match the particulars of your Openshift installation.
 
 ### Installing The Game
 
@@ -48,13 +48,13 @@ To manage the game, login into the admin application. The default token is ```CH
 
 ### Blue/Green Gamebus Deployment
 
-This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green environments can be either a single or separate vert.x clusters, by default it is a single cluster. In the single cluster mode, it uses multicast which is supported in OpenShift 3.5 and later only. In separate cluser mode, it uses a custom Kubernetes discovery strategy that was created as part of the original demo for Summit 2016. In separate cluster mode, this means that each cluster has separate state (game state, players, teams, etc) so when switching between the two environments the game will effectively be reset. 
+This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green gamebus environments are configured as a single vert.x cluster and it uses multicast which is only supported in OpenShift 3.5 and later only. 
 
-A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo. When using this as a demo with the separate cluster configuration, it is recommended to set the game state to 'title' before initiating the pipeline, particularly if you plan to switch back and forth between blue and green multiple times. When using the default single cluster there is no need for this since the state is shared between the two.
+A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo.
+
+Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a while it doesn't take and some players may need to do a manual refresh of their browser so be prepared for that.
 
 When a game player connects the game client, the background color is automatically set based on the color of the environment making it easy for the audience to understand when the environment has been flipped. This is done through the COLOR environment variable. Valid colors include ```default```, ```blue```, ```green``` or ```canary```. This also means that setting the background in the admin application is ignored when the COLOR environment variable is present.
-
-Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a blue moon it doesn't take and some players may need to do a manual refresh.
 
 This demo has been tested once with a group of people and it worked well, however feedback is always welcome.
 
@@ -74,9 +74,13 @@ The original game consisted of a number of repositories in github, 21 in total i
 
 ### Random Thoughts
 
-I've facilitated between making the blue/green a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information would be carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both and it could cause some odd edge case issues. One issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
+I've wavered between making the blue/green instances a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information are carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both. For example, one issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
 
-Ideally things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
+You can try running the clusters as separate clusters by copying the contents of ```cluster-seperate.xml``` into ```cluster.xml``` in the vertx-game-server repository. When run as separate clusters it uses the Kubernetes discovery mechanism that was implemented by the initial Summit development team rather then multicast. 
+
+It would be nice if things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
+
+Another thing I would like to do is deploy a canary on the fly. It would be relatively trivial to create a pipeline to do this as I believe no existing code changes would be required.
 
 ### Credits
 
