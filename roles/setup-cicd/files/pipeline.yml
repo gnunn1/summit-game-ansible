@@ -101,3 +101,9 @@ parameters:
   generate: expression
   name: GENERIC_WEBHOOK_SECRET
   required: true
+- description: The number of gamebus replicas
+  displayName: Replica Count
+  name: REPLICA_COUNT
+  required: false
+  value: 1
+  
