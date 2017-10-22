@@ -25,10 +25,10 @@
     dest: "{{template_path.path}}"
 
 - name: Create blue game server
-  command: "oc new-app -f {{template_path.path}} -p COLOR=blue -p APPLICATION_NAME=gamebus"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=blue -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}}"
 
 - name: Create green game server
-  command: "oc new-app -f {{template_path.path}} -p COLOR=green -p APPLICATION_NAME=gamebus"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=green -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}}"
 
 - name: Wait for blue game server to be ready
   command: "oc get ep gamebus-blue"
@@ -45,4 +45,7 @@
   delay: 10
 
 - name: Create gamebus blue-green routes
-  shell: "oc process -p APPLICATION_NAME=gamebus -f roles/setup-game-server/files/game-server-routes.json | oc create -f -"
+  shell: |
+    oc process -p APPLICATION_NAME=gamebus -f roles/setup-game-server/files/game-server-routes.json | oc create -f -
+    oc annotate route/gamebus haproxy.router.openshift.io/balance=roundrobin
+    oc annotate route/gamebus haproxy.router.openshift.io/disable_cookies=true

@@ -1,25 +1,29 @@
 ################################################
 #  Minishift variables
 ################################################
-master_url: https://192.168.42.62:8443
-username: developer
-password: developer
+#master_url: https://192.168.42.62:8443
+#username: developer
+#password: developer
 
-admin_username: admin
-admin_password: admin
+#admin_username: admin
+#admin_password: admin
 
 ################################################
 # ocplab.com variables
 ################################################
 
-#master_url: https://ocplab.com:8443
-#username: developer3
-#password: xxxxxx
+master_url: https://ocplab.com:8443
+username: developer1
+password: xxxxxx
 
-#admin_username: admin
-#admin_password: xxxxxx
+admin_username: admin
+admin_password: xxxxx
 
 project_name: summit-game
+
+# The number of replicas to use for each color. If this is set to 2
+# then blue will have 2 and green will have 2 for 4 total.
+gamebus_replica_count: 1
 
 # Score server
 score_user: kieserver

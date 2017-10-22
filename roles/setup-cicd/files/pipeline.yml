@@ -40,7 +40,7 @@ objects:
 
             openshiftTag(sourceStream: 'gamebus', sourceTag: 'latest', namespace: '${PROJECT_NAME}', destinationStream: 'gamebus', destinationTag: "${tag}", destinationNamespace: '${PROJECT_NAME}')
             sleep 5
-            openshiftVerifyDeployment(deploymentConfig: "gamebus-${tag}", replicaCount: 1, verifyReplicaCount: true, namespace: '${PROJECT_NAME}')
+            openshiftVerifyDeployment(deploymentConfig: "gamebus-${tag}", replicaCount: '${REPLICA_COUNT}', verifyReplicaCount: true, namespace: '${PROJECT_NAME}')
 
             stage 'Smoke Tests in PROD (Not Live)'
             sleep 5

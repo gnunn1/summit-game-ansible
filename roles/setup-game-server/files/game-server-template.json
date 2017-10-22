@@ -31,6 +31,13 @@
             "required": true
         },
         {
+            "description": "Number of replicas to deploy",
+            "displayName": "Replica Count",
+            "name": "REPLICA_COUNT",
+            "value": "1",
+            "required": false
+        },
+        {
             "description": "Maven Mirror URL",
             "displayName": "Maven Mirror URL",
             "name": "MAVEN_MIRROR_URL",
@@ -150,7 +157,10 @@
             },
             "spec": {
                 "strategy": {
-                    "type": "Recreate"
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "timeoutSeconds": 60
+                    }
                 },
                 "triggers": [
                     {
@@ -170,7 +180,7 @@
                         "type": "ConfigChange"
                     }
                 ],
-                "replicas": 1,
+                "replicas": "${REPLICA_COUNT}",
                 "selector": {
                     "deploymentConfig": "${APPLICATION_NAME}-${COLOR}"
                 },
@@ -248,7 +258,7 @@
                                     },
                                     {
                                         "name": "POD_LABEL_VALUE",
-                                        "value": "${APPLICATION_NAME}-${COLOR}"
+                                        "value": "${APPLICATION_NAME}"
 
                                     }                                    
                                 ],
