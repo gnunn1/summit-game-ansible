@@ -191,7 +191,7 @@
                             "app": "${APPLICATION_NAME}",
                             "variant": "${COLOR}",
                             "deploymentConfig": "${APPLICATION_NAME}-${COLOR}",
-                            "vertx-cluster": "${APPLICATION_NAME}-${COLOR}"
+                            "vertx-cluster": "${APPLICATION_NAME}"
                         }
                     },
                     "spec": {
