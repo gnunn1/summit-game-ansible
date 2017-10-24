@@ -76,7 +76,7 @@ The original game consisted of a number of repositories in github, 21 in total i
 
 I've wavered between making the blue/green instances a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information are carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both. For example, one issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
 
-Right now the cluster uses the original kubernetes discovery that was created for the original demo. It would be nice to sue multicast though as it is simpler to configure. Multicast works fine in minishift however I was having issues with it in AWS, need to investigate what the issue is.
+Right now the cluster uses the original kubernetes discovery that was created for the original demo. It would be nice to use multicast though as it is simpler to configure. Multicast works fine in minishift however I was having issues with it in AWS, need to investigate what the issue is.
 
 It would be nice if things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
 
