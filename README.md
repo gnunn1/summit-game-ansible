@@ -48,7 +48,7 @@ To manage the game, login into the admin application. The default token is ```CH
 
 ### Blue/Green Gamebus Deployment
 
-This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green gamebus environments are configured as a single vert.x cluster and it uses multicast which is only supported in OpenShift 3.5 and later only.
+This playbook installs the gamebus in a blue/green configuration with 100% of the traffic being sent initially to blue. The blue/green gamebus environments are configured as a single vert.x cluster and it uses kubernetes discovery.
 
 The background of the game client reflects the environment color the player is connected to. A ```gamebus-pipeline``` is included which will build and deploy the application as well as change the route to the opposite color. This pipeline was adapted from the coolstore-microservice demo.
 
@@ -67,7 +67,7 @@ The original game consisted of a number of repositories in github, 21 in total i
 |[vertx-game-server](https://github.com/gnunn1/vertx-game-server)| The game server that acts as an integration bus for the other microservices. The game, leaderboard and scoreboard all connect to this in order to communicate with the other components. As the name implies, this component uses the [Vert.X](http://vertx.io/) framework.
 |[mobile-app](https://github.com/gnunn1/mobile-app)| This is the actual game, it is a game written in typescript using angular. It communicates both with it's own back-end server as well as the vertx-game-server.
 |[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game. This component does not run in OpenShift, instead it is run locally on your laptop or in Amazon EC2/S3, it requires connectivity to the vertx-game-server.
-|[achievement-server](https://github.com/burrsutter/vertx-achievement-service)| Manages the player achievements, it is a JEE application that runs on EAP (or Wildfly)
+|[achievement-server](https://github.com/burrsutter/vertx-achievement-service)| Manages the player achievements, it originally was a JEE application that ran on EAP (or Wildfly), however it was recently re-written in vert.x which is wwhat is used here.
 |[score-server](https://github.com/gnunn1/score-server)| Aggregates the player scores, runs on BRMS and uses rules to evaluate scoring. This was forked to fix a build issue as a dependency on hibernate-core was needed to compile the hibernate annotations.
 |[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is run outside of OpenShift to display the leaderboard. It requires connectivity to the vertx-game-server.
 |[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is run outside of OpenShift to display the scoreboard. It requires connectivity to the vertx-game-server.
@@ -76,7 +76,7 @@ The original game consisted of a number of repositories in github, 21 in total i
 
 I've wavered between making the blue/green instances a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information are carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both. For example, one issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
 
-You can try running the clusters as separate clusters by copying the contents of ```cluster-seperate.xml``` into ```cluster.xml``` in the vertx-game-server repository. When run as separate clusters it uses the Kubernetes discovery mechanism that was implemented by the initial Summit development team rather then multicast. 
+Right now the cluster uses the original kubernetes discovery that was created for the original demo. It would be nice to sue multicast though as it is simpler to configure. Multicast works fine in minishift however I was having issues with it in AWS, need to investigate what the issue is.
 
 It would be nice if things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
 
