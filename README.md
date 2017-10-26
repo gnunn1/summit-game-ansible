@@ -44,7 +44,7 @@ To install the game, simply run the ```install.sh``` command which will run the 
 
 ### Managing The Game
 
-To manage the game and switch between the different modes (title, start, game over, etc), login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make suire to update it in gamebus-pipeline as well.
+To manage the game and switch between the different modes (title, start, game over, etc), login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make sure to update it in gamebus-pipeline as well.
 
 ### Blue/Green Gamebus Deployment
 
