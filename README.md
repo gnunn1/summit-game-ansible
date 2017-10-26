@@ -76,7 +76,7 @@ The original game consisted of a number of repositories in github, 21 in total i
 
 ### Environment
 
-I have used this demo three times with the largest audience consisting of 120 people and for this size audience I find a small environment is all that is needed to run the demo. I use a small OpenShift environment (1 master, 3 app nodes) running in AWS with no issue.
+I have used this demo three times with the largest audience consisting of 120 people and for this size audience I find a small environment is all that is needed to run the demo. I used a small OpenShift environment (1 master, 3 app nodes) running in AWS with no issue. I use this [playbook](https://github.com/gnunn1/openshift-aws-setup) to provision my AWS environment but it shouldn't matter what you use.
 
 I typically set the number of gamebus replicas to 2 in the ```vars/game-config.yml``` file. 
 
