@@ -28,7 +28,7 @@ oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/offici
 
 #### Cluster Admin Required
 
-The playbook uses an admin user to install the required templates and imagestreams. The admin user requires a username and password, ```system:admin``` is not used since this playbook must support remote installations of Openshift. You can create an admin user in the CDK or minishift by logging in with a username and password and the run the following command:
+The playbook uses an admin user to install the required templates and imagestreams. The admin user requires a username and password, ```system:admin``` is not used since this playbook must support installations of Openshift that can only be accessed remotely. You can create an admin user in the CDK or minishift by logging in with a username and password and then run the following command:
 
 ```
 oc adm policy add-cluster-role-to-user cluster-admin <username>
