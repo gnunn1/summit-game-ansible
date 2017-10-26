@@ -105,5 +105,5 @@ parameters:
   displayName: Replica Count
   name: REPLICA_COUNT
   required: false
-  value: 1
+  value: '1'
   
