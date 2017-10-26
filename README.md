@@ -44,7 +44,7 @@ To install the game, simply run the ```install.sh``` command which will run the 
 
 ### Managing The Game
 
-To manage the game, login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make suire to update it in gamebus-pipeline as well.
+To manage the game and switch between the different modes (title, start, game over, etc), login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make suire to update it in gamebus-pipeline as well.
 
 ### Blue/Green Gamebus Deployment
 
@@ -65,12 +65,18 @@ The original game consisted of a number of repositories in github, 21 in total i
 | Repository | Description
 |---|---|
 |[vertx-game-server](https://github.com/gnunn1/vertx-game-server)| The game server that acts as an integration bus for the other microservices. The game, leaderboard and scoreboard all connect to this in order to communicate with the other components. As the name implies, this component uses the [Vert.X](http://vertx.io/) framework.
-|[mobile-app](https://github.com/gnunn1/mobile-app)| This is the actual game, it is a game written in typescript using angular. It communicates both with it's own back-end server as well as the vertx-game-server.
+|[mobile-app](https://github.com/gnunn1/mobile-app)| This is the actual game, it is written in typescript using angular and requires NodeJS 4. It communicates both with the vertx-game-server.
 |[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game. This component does not run in OpenShift, instead it is run locally on your laptop or in Amazon EC2/S3, it requires connectivity to the vertx-game-server.
 |[achievement-server](https://github.com/burrsutter/vertx-achievement-service)| Manages the player achievements, it originally was a JEE application that ran on EAP (or Wildfly), however it was recently re-written in vert.x which is wwhat is used here.
 |[score-server](https://github.com/gnunn1/score-server)| Aggregates the player scores, runs on BRMS and uses rules to evaluate scoring. This was forked to fix a build issue as a dependency on hibernate-core was needed to compile the hibernate annotations.
 |[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is run outside of OpenShift to display the leaderboard. It requires connectivity to the vertx-game-server.
 |[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is run outside of OpenShift to display the scoreboard. It requires connectivity to the vertx-game-server.
+
+### Environment
+
+I have used this demo three times with the largest audience consisting of 120 people and for this size audience I find a small environment is all that is needed to run the demo. I use a small OpenShift environment (1 master, 3 app nodes) running in AWS with no issue.
+
+I typically set the number of gamebus replicas to 2 in the ```vars/game-config.yml``` file. 
 
 ### Random Thoughts
 
