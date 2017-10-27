@@ -68,11 +68,11 @@ The original game consisted of a number of repositories in github, 21 in total i
 |---|---|
 |[vertx-game-server](https://github.com/gnunn1/vertx-game-server)| The game server that acts as an integration bus for the other microservices. The game, leaderboard and scoreboard all connect to this in order to communicate with the other components. As the name implies, this component uses the [Vert.X](http://vertx.io/) framework.
 |[mobile-app](https://github.com/gnunn1/mobile-app)| This is the actual game, it is written in typescript using angular and requires NodeJS 4. It communicates both with the vertx-game-server.
-|[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game. This component does not run in OpenShift, instead it is run locally on your laptop or in Amazon EC2/S3, it requires connectivity to the vertx-game-server.
+|[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game and it requires connectivity to the vertx-game-server.
 |[achievement-server](https://github.com/burrsutter/vertx-achievement-service)| Manages the player achievements, it originally was a JEE application that ran on EAP (or Wildfly), however it was recently re-written in vert.x which is wwhat is used here.
 |[score-server](https://github.com/gnunn1/score-server)| Aggregates the player scores, runs on BRMS and uses rules to evaluate scoring. This was forked to fix a build issue as a dependency on hibernate-core was needed to compile the hibernate annotations.
-|[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is run outside of OpenShift to display the leaderboard. It requires connectivity to the vertx-game-server.
-|[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is run outside of OpenShift to display the scoreboard. It requires connectivity to the vertx-game-server.
+|[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is used to display the leaderboard. It requires connectivity to the vertx-game-server.
+|[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is used to display the scoreboard. It requires connectivity to the vertx-game-server.
 
 ### Environment
 
