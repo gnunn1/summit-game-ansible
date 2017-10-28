@@ -3,4 +3,4 @@
   command: "oc new-app jenkins-ephemeral"
 
 - name: Install pipeline
-  shell: "oc process -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}} -p PROJECT_NAME={{project_name}} -f roles/setup-cicd/files/pipeline.yml | oc create -f -"
+  shell: "oc process -p APPLICATION_NAME=gamebus -p AUTH_TOKEN={{auth_token}} -p REPLICA_COUNT={{gamebus_replica_count}} -p PROJECT_NAME={{project_name}} -f roles/setup-cicd/files/pipeline.yml | oc create -f -"

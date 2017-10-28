@@ -61,7 +61,7 @@ objects:
             sleep 5
 
             stage 'Request Reconnect'
-            sh "curl -H 'Content-Type: application/json' -X POST -d '{\"type\":\"reconnect\",\"token\":\"CH2UsJePthRWTmLI8EY6\"}' http://gamebus-${altTag}:9001/reconnect"
+            sh "curl -H 'Content-Type: application/json' -X POST -d '{\"type\":\"reconnect\",\"token\":\"${AUTH_TOKEN}\"}' http://gamebus-${altTag}:9001/reconnect"
 
             sleep 5             
           }
@@ -106,4 +106,9 @@ parameters:
   name: REPLICA_COUNT
   required: false
   value: '1'
+- description: Authentication token
+  displayName: Authentication token
+  name: AUTH_TOKEN
+  required: true
+  value: 'CH2UsJePthRWTmLI8EY6'
   

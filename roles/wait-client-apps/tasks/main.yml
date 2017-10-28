@@ -1,4 +1,4 @@
-- name: Wait for admin application to be ready
+- name: Wait for javascript applications to be ready
   command: "oc get ep {{item}}"
   register: result
   until: result.stdout.find("none") == -1

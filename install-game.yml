@@ -48,6 +48,10 @@
       command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
       ignore_errors: true
 
+    - name: Create authentication token secret
+      command: "oc create secret generic game-auth --from-literal=token={{auth_token}}"
+      ignore_errors: true
+
     - name: Add view role to support kubernetes discovery for system:serviceaccounts:summit-game group
       command: "oc policy add-role-to-group view system:serviceaccounts:{{project_name}} -n {{project_name}}"
       ignore_errors: true

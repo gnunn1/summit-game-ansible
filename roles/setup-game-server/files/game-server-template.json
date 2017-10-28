@@ -42,7 +42,7 @@
             "displayName": "Maven Mirror URL",
             "name": "MAVEN_MIRROR_URL",
             "required": false
-        }
+        }    
     ],
     "objects": [
         {
@@ -259,8 +259,16 @@
                                     {
                                         "name": "POD_LABEL_VALUE",
                                         "value": "${APPLICATION_NAME}"
-
-                                    }                                    
+                                    },
+                                    {
+                                        "name": "AUTH_TOKEN",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "key": "token",
+                                                "name": "game-auth"
+                                            }
+                                        }
+                                    }
                                 ],
                                 "ports": [
                                     {
