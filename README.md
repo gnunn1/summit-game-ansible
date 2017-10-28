@@ -28,7 +28,7 @@ oc create -f https://raw.githubusercontent.com/luciddreamz/library/master/offici
 
 #### Cluster Admin Required
 
-The playbook uses an admin user to install the required templates and imagestreams. The admin user requires a username and password, ```system:admin``` is not used since this playbook must support remote installations of Openshift. You can create an admin user in the CDK or minishift by logging in with a username and password and the run the following command:
+The playbook uses an admin user to install the required templates and imagestreams. The admin user requires a username and password, ```system:admin``` is not used since this playbook must support installations of Openshift that can only be accessed remotely. You can create an admin user in the CDK or minishift by logging in with a username and password and then run the following command:
 
 ```
 oc adm policy add-cluster-role-to-user cluster-admin <username>
@@ -44,7 +44,7 @@ To install the game, simply run the ```install.sh``` command which will run the 
 
 ### Managing The Game
 
-To manage the game and switch between the different modes (title, start, game over, etc), login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make suire to update it in gamebus-pipeline as well.
+To manage the game and switch between the different modes (title, start, game over, etc), login into the admin application. The default token is ```CH2UsJePthRWTmLI8EY6```. If you change the token in the game-server, make sure to update it in gamebus-pipeline as well.
 
 ### Blue/Green Gamebus Deployment
 
@@ -54,9 +54,11 @@ The background of the game client reflects the environment color the player is c
 
 Note that simply updating the route to send all traffic to the opposite pod will not change the color of the background automatically. This is because the game uses a persistent connection via a WebSocket and thus the connection will not be re-routed unless a new connection is established. The last stage of the pipeline will initiate a reconnect for game and admin clients by sending a curl request to the idle game-server, this should force everyone to the new one. However once in a while it doesn't take and some players may need to do a manual refresh of their browser so be prepared for that.
 
+However, at the last couple of events I removed the reconnect from the pipeline. I found it actually made for a better experience explaining why the background hadn't changed (persistent websocket connection and HAProxy allowing connections to be drained) and have them refresh their browser manually to see the new color after the explanation. The reconnect isn't seamless so it leads to a bit of a "what happened?" moment.
+
 When a game player connects the game client, the background color is automatically set based on the color of the environment making it easy for the audience to understand when the environment has been flipped. This is done through the COLOR environment variable. Valid colors include ```default```, ```blue```, ```green``` or ```canary```. This also means that setting the background in the admin application is ignored when the COLOR environment variable is present.
 
-This demo has been tested once with a group of people and it worked well, however feedback is always welcome.
+This demo has been used at three events and it worked well, however feedback is always welcome.
 
 ### Repositories
 
@@ -66,15 +68,15 @@ The original game consisted of a number of repositories in github, 21 in total i
 |---|---|
 |[vertx-game-server](https://github.com/gnunn1/vertx-game-server)| The game server that acts as an integration bus for the other microservices. The game, leaderboard and scoreboard all connect to this in order to communicate with the other components. As the name implies, this component uses the [Vert.X](http://vertx.io/) framework.
 |[mobile-app](https://github.com/gnunn1/mobile-app)| This is the actual game, it is written in typescript using angular and requires NodeJS 4. It communicates both with the vertx-game-server.
-|[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game. This component does not run in OpenShift, instead it is run locally on your laptop or in Amazon EC2/S3, it requires connectivity to the vertx-game-server.
+|[mobile-app-admin](https://github.com/gnunn1/mobile-app-admin)| This is the tool to administer the game, without this app you cannot start the game and it requires connectivity to the vertx-game-server.
 |[achievement-server](https://github.com/burrsutter/vertx-achievement-service)| Manages the player achievements, it originally was a JEE application that ran on EAP (or Wildfly), however it was recently re-written in vert.x which is wwhat is used here.
 |[score-server](https://github.com/gnunn1/score-server)| Aggregates the player scores, runs on BRMS and uses rules to evaluate scoring. This was forked to fix a build issue as a dependency on hibernate-core was needed to compile the hibernate annotations.
-|[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is run outside of OpenShift to display the leaderboard. It requires connectivity to the vertx-game-server.
-|[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is run outside of OpenShift to display the scoreboard. It requires connectivity to the vertx-game-server.
+|[leaderboard](https://github.com/gnunn1/leaderboard)| A javascript application that is used to display the leaderboard. It requires connectivity to the vertx-game-server.
+|[scoreboard](https://github.com/gnunn1/scoreboard)| A javascript application that is used to display the scoreboard. It requires connectivity to the vertx-game-server.
 
 ### Environment
 
-I have used this demo three times with the largest audience consisting of 120 people and for this size audience I find a small environment is all that is needed to run the demo. I use a small OpenShift environment (1 master, 3 app nodes) running in AWS with no issue.
+I have used this demo three times with the largest audience consisting of 120 people and for this size audience I find a small environment is all that is needed to run the demo. I used a small OpenShift environment (1 master, 3 app nodes) running in AWS with no issue. I use this [playbook](https://github.com/gnunn1/openshift-aws-setup) to provision my AWS environment but it shouldn't matter what you use.
 
 I typically set the number of gamebus replicas to 2 in the ```vars/game-config.yml``` file. 
 
