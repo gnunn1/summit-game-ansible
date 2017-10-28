@@ -7,10 +7,3 @@
 
 - name: Create probes
   command: "oc set probe dc/mobile-app --readiness --liveness --open-tcp=8080 --initial-delay-seconds=10"
-
-- name: Wait for game application to be ready
-  command: "oc get ep mobile-app"
-  register: result
-  until: result.stdout.find("none") == -1
-  retries: 50
-  delay: 15 

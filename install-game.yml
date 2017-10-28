@@ -13,6 +13,7 @@
   - setup-admin-app
   - setup-scoreboard-app
   - setup-leaderboard-app
+  - wait-client-apps
   - setup-cicd
   
   pre_tasks:
