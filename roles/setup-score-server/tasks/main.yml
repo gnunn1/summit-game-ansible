@@ -6,7 +6,7 @@
     score_db_password: "imEffH9QP8QcL"
 
 - name: Create score database server
-  command: "oc new-app --template=postgresql-ephemeral -p DATABASE_SERVICE_NAME=score-postgresql -p POSTGRESQL_USER={{score_db_user}} -p POSTGRESQL_PASSWORD={{score_db_password}} -p POSTGRESQL_DATABASE={{score_db_name}}"
+  command: "oc new-app --template=postgresql-ephemeral -p POSTGRESQL_VERSION=9.5 -p DATABASE_SERVICE_NAME=score-postgresql -p POSTGRESQL_USER={{score_db_user}} -p POSTGRESQL_PASSWORD={{score_db_password}} -p POSTGRESQL_DATABASE={{score_db_name}}"
 
 - name: Wait for database server to be ready
   command: "oc get ep score-postgresql"
