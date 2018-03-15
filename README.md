@@ -84,9 +84,7 @@ I typically set the number of gamebus replicas to 2 in the ```vars/game-config.y
 
 I've wavered between making the blue/green instances a single vert.x cluster versus separate clusters. The single cluster is easier because the game state, players and other persistent information are carried between the two when switching from blue to green making for a more seamless transition. However it goes against the idea of each color being independent since the eventbus queues would be clustered across both. This means events that should be specific to green or blue get applied to both. For example, one issue I had to deal with is configuration messages being served from the idle environment resulting in the game-client getting the wrong color.
 
-Right now the cluster uses the original kubernetes discovery that was created for the original demo. It would be nice to use multicast though as it is simpler to configure. Multicast works fine in minishift however I was having issues with it in AWS, need to investigate what the issue is.
-
-It would be nice if things like the game state, player identifiers, configuration, etc would be moved to an externalized persistent store like JDG, Hazelcast, etc. Hopefully down the road I'll have a chance to dig into this some more.
+The original version of the game server (i.e. gamebus) used Hazelcast as the Vert.x cluster manager. I have recently updated it to use Infinispan with replicated caches rather then the distributed ones on Hazelcast. This fixes the problem of the state having to be on enough backups to ensure it survives the blue/green deployment. With the replicated caches every pod has a copy of the cache.
 
 Another thing I would like to do is deploy a canary on the fly. It would be relatively trivial to create a pipeline to do this as I believe no existing code changes would be required.
 
