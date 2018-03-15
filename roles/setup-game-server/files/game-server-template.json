@@ -49,7 +49,21 @@
             "displayName": "Maven Mirror URL",
             "name": "MAVEN_MIRROR_URL",
             "required": false
-        }    
+        },
+        {
+            "description": "The username for the Score server",
+            "displayName": "Score Username",
+            "name": "SCORE_USERNAME",
+            "value": "kieserver",
+            "required": true
+        },
+        {
+            "description": "The password for the Score server",
+            "displayName": "Score Password",
+            "name": "SCORE_PASSWORD",
+            "value": "ki3server@",
+            "required": true
+        }
     ],
     "objects": [
         {
@@ -253,11 +267,11 @@
                                     },
                                     {   
                                         "name": "SCORE_USER",
-                                        "value": "{{score_user}}"
+                                        "value": "${SCORE_USERNAME}"
                                     },
                                     {   
                                         "name": "SCORE_PASSWORD",
-                                        "value": "{{score_password}}"
+                                        "value": "${SCORE_PASSWORD}"
                                     },
                                     {   
                                         "name": "COLOR",
