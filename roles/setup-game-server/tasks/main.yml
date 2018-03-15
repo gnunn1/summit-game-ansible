@@ -12,6 +12,9 @@
     oc tag {{project_name}}/gamebus:latest {{project_name}}/gamebus:blue
     oc tag {{project_name}}/gamebus:latest -d
 
+- name: Update default service account to enable kube API access for infinispan clustering
+  shell: "oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)"
+
 # Start creating blue/green apps
 - name: Create temporary file for application template
   tempfile:
@@ -25,10 +28,10 @@
     dest: "{{template_path.path}}"
 
 - name: Create blue game server
-  command: "oc new-app -f {{template_path.path}} -p COLOR=blue -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}}"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=blue -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}} -p NAMESPACE={{project_name}}"
 
 - name: Create green game server
-  command: "oc new-app -f {{template_path.path}} -p COLOR=green -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}}"
+  command: "oc new-app -f {{template_path.path}} -p COLOR=green -p APPLICATION_NAME=gamebus -p REPLICA_COUNT={{gamebus_replica_count}} -p NAMESPACE={{project_name}}"
 
 - name: Wait for blue game server to be ready
   command: "oc get ep gamebus-blue"

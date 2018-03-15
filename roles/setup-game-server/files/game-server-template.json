@@ -24,6 +24,13 @@
             "required": true
         },
         {
+            "description": "The namespace the template resources will be created in",
+            "displayName": "Namespace",
+            "name": "NAMESPACE",
+            "value": "",
+            "required": true
+        },
+        {
             "description": "Deployment color (i.e. default, blue, green or canary)",
             "displayName": "Color",
             "name": "COLOR",
@@ -218,7 +225,7 @@
                                 "env": [
                                     {
                                         "name": "JAVA_APP_JAR",
-                                        "value": "game-service-1.0.0-SNAPSHOT-fat.jar"
+                                        "value": "game-service-1.1.0-SNAPSHOT.jar"
                                     },
                                     {
                                         "name": "JAVA_ARGS",
@@ -241,8 +248,8 @@
                                         "value": "9090"
                                     },
                                     {
-                                        "name": "JAVA_ARGS",
-                                        "value": "-cluster"
+                                        "name": "JAVA_OPTIONS",
+                                        "value": "-Dvertx.jgroups.config=default-configs/default-jgroups-kubernetes.xml"
                                     },
                                     {   
                                         "name": "SCORE_USER",
@@ -257,8 +264,12 @@
                                         "value": "${COLOR}"
                                     },
                                     {
-                                        "name": "POD_LABEL_VALUE",
-                                        "value": "${APPLICATION_NAME}"
+                                        "name": "KUBERNETES_LABELS",
+                                        "value": "vertx-cluster=${APPLICATION_NAME}"
+                                    },
+                                    {
+                                        "name": "KUBERNETES_NAMESPACE",
+                                        "value": "${NAMESPACE}"
                                     },
                                     {
                                         "name": "AUTH_TOKEN",
