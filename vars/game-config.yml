@@ -1,7 +1,7 @@
 ################################################
 #  Minishift variables
 ################################################
-master_url: https://192.168.42.62:8443
+master_url: https://127.0.0.1:8443
 username: developer
 password: developer
 
@@ -13,11 +13,11 @@ admin_password: admin
 ################################################
 
 # master_url: https://ocplab.com:8443
-# username: developer1
-# password: xxxxxx
+# username: user04
+# password: dummy
 
 # admin_username: admin
-# admin_password: xxxxx
+# admin_password: dummy
 
 project_name: summit-game
 
@@ -26,7 +26,11 @@ auth_token: CH2UsJePthRWTmLI8EY6
 
 # The number of replicas to use for each color. If this is set to 2
 # then blue will have 2 and green will have 2 for 4 total.
-gamebus_replica_count: 1
+gamebus_replica_count: 2
+
+# If you are installing on something other then a single node
+# cluster, set to true to deploy javascript apps in parallel
+parallel_build: false
 
 # Score server
 score_user: kieserver

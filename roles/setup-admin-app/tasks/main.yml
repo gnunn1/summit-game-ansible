@@ -1,5 +1,5 @@
 ---
-- name: Setup up mobile admin application
+- name: Setup up mobile-app-admin application
   command: "oc new-app openshift/nodejs:6~{{ mobile_admin_app_repo }}"
 
 - name: Expose route for mobile admin application
@@ -7,3 +7,11 @@
 
 - name: Create probes
   command: "oc set probe dc/mobile-app-admin --readiness --liveness --open-tcp=8080 --initial-delay-seconds=10"
+
+- name: Wait for mobile-app-admin deployment
+  command: "oc get ep mobile-app-admin"
+  register: result
+  until: result.stdout.find("none") == -1 
+  retries: 50
+  delay: 10 
+  when: not parallel_build

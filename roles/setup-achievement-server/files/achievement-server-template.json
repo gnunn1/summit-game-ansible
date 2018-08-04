@@ -34,7 +34,7 @@
             "description": "Git source URI for application",
             "displayName": "Git Repository URL",
             "name": "SOURCE_REPOSITORY_URL",
-            "value": "https://github.com/burrsutter/vertx-achievement-server",
+            "value": "https://github.com/burrsutter/vertx-achievement-service",
             "required": true
         },
         {
@@ -155,7 +155,7 @@
                         "from": {
                             "kind": "ImageStreamTag",
                             "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                            "name": "redhat-openjdk18-openshift:1.1"
+                            "name": "redhat-openjdk18-openshift:1.4"
                         }
                     }
                 },

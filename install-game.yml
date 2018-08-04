@@ -13,13 +13,13 @@
   - setup-admin-app
   - setup-scoreboard-app
   - setup-leaderboard-app
-  - wait-client-apps
+  - {role: wait-client-apps, when: parallel_build}  
   - setup-cicd
   
   pre_tasks:
 
     - name: Login to openshift as admin
-      command: "oc login -u {{admin_username}} -p {{admin_password}} {{master_url}}"
+      command: "oc login --insecure-skip-tls-verify=true -u {{admin_username}} -p {{admin_password}} {{master_url}}"
 
     - name: Install ephemeral postgresSQL template
       command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/postgresql/templates/postgresql-ephemeral.json -n openshift"
@@ -30,19 +30,19 @@
       ignore_errors: true
 
     - name: Install BRMS ImageStream
-      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/decisionserver/imagestreams/jboss-decisionserver63-openshift-rhel7.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.9/roles/openshift_examples/files/examples/v3.9/xpaas-streams/decisionserver64-image-stream.json -n openshift"
       ignore_errors: true
 
     - name: Install BRMS template
-      command: "oc apply -f https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_examples/files/examples/v3.6/xpaas-templates/decisionserver63-basic-s2i.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.9/roles/openshift_examples/files/examples/v3.9/xpaas-templates/decisionserver64-basic-s2i.json -n openshift"
       ignore_errors: true
 
     - name: Install Java S2I ImageStream
-      command: "oc apply -f https://raw.githubusercontent.com/luciddreamz/library/master/official/java/imagestreams/redhat-openjdk18-openshift-rhel7.json -n openshift"
+      command: "oc apply -f https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.9/roles/openshift_examples/files/examples/v3.9/xpaas-streams/openjdk18-image-stream.json -n openshift"
       ignore_errors: true
 
     - name: Login to openshift as user
-      command: "oc login -u {{username}} -p {{password}} {{master_url}}"
+      command: "oc login --insecure-skip-tls-verify=true -u {{username}} -p {{password}} {{master_url}}"
 
     - name: Create openshift project
       command: "oc new-project {{project_name}} --display-name='Summit Balloon Game' --description='Multiplayer mobile balloon game from 2016 Red Hat Summit'"
